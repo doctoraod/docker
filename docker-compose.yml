@@ -1,0 +1,35 @@
+version: '3'
+services:
+  api:
+    restart: always
+    image: my-api
+    hostname: myapi
+    volumes:
+      - ./:/var/source
+    networks:
+      - apinetwork
+    depends_on:
+      - mysql
+    ports: 
+      - 3000:3000
+    environment:
+      DB_NAME: myapi
+      DB_HOSTNAME: mysql
+      DB_USER: root
+      DB_PASSWORD: 
+  mysql:
+    restart: always
+    image: mysql:5.7
+    hostname: mysql
+    volumes:
+      - ./.tmp:/var/lib/mysql
+    networks:
+      - apinetwork
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: myapi
+      
+networks:
+  apinetwork:
+    driver: bridge
